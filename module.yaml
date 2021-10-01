@@ -1,6 +1,6 @@
-name: turbonomic
+name: MAS
 type: terraform
-description: Module to install Turbonomic
+description: Module to install MAS
 tags:
     - tools
     - devops
