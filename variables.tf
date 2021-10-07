@@ -20,3 +20,14 @@ variable "tls_secret_name" {
   default = ""
 }
 
+variable "mas_mongo_namespace" {
+  type        = string
+  description = "Namespace where MongoDB is deployed"
+  default = "mongo"
+}
+
+variable "mas_mongo_storageclass" {
+  type        = string
+  description = "Storageclass for MongoDB"
+  default = "ibmc-vpc-block-10iops-tier"
+}

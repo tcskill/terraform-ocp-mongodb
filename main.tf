@@ -10,4 +10,26 @@ module setup_clis {
   clis = ["helm"]
 }
 
+resource "null_resource" "deploy_MongoCRD" {
+  triggers = {
+    namespace = var.mas_mongo_namespace
+    kubeconfig = var.cluster_config_file
+  }
 
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/deployMongoCRD.sh ${self.triggers.namespace}"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "${path.module}/scripts/deployMongoCRD.sh ${self.triggers.namespace} destroy"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+} 
