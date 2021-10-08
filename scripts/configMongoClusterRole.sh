@@ -9,10 +9,7 @@ if [[ "$3" == "destroy" ]]; then
     echo "removing cluster role and binding..."
     kubectl delete ClusterRoleBinding ${SANAME}
     kubectl delete ClusterRole ${SANAME}
-    ##kubectl delete -f "${CHARTS_DIR}/cluster_role.yaml"
-else 
-##kubectl create -f "${CHARTS_DIR}/cluster_role.yaml"
-#build cluster role
+else
 cat > "${CHARTS_DIR}/mongocluster_role.yaml" << EOL
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

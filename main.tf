@@ -84,4 +84,30 @@ resource "null_resource" "add_scc" {
       KUBECONFIG = self.triggers.kubeconfig
     }
   }
+}
+
+resource "null_resource" "deploy_operator" {
+  depends_on = [null_resource.add_scc]
+  triggers = {
+    kubeconfig = var.cluster_config_file
+    namespace = var.mongo_namespace
+    msaname = var.mongo_serviceaccount
+  }
+
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/installOperator.sh ${self.triggers.msaname} ${self.triggers.namespace}"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "${path.module}/scripts/installOperator.sh ${self.triggers.msaname} ${self.triggers.namespace} destroy"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
 } 

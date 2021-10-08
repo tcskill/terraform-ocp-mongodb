@@ -7,11 +7,11 @@ CHARTS_DIR=$(cd $(dirname $0)/../charts; pwd -P)
 if [[ "$3" == "destroy" ]]; then
     echo "removing chart extension..."
     # remove the the operator and chart extensions
-    kubectl delete Deployment t8c-operator -n ${NAMESPACE}
+    kubectl delete Deployment mongodb-kubernetes-operator -n ${NAMESPACE}
     kubectl delete CustomResourceDefinition xls.charts.helm.k8s.io
 else 
     # deploy the chart extensions needed
-    kubectl create -f "${CHARTS_DIR}/charts_v1alpha1_xl_crd.yaml"
+    #kubectl create -f "${CHARTS_DIR}/charts_v1alpha1_xl_crd.yaml"
 
     # create the yaml for operator deployment and deploy it
 
@@ -19,27 +19,39 @@ cat > "${CHARTS_DIR}/operator.yaml" << EOL
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: t8c-operator
+  annotations:
+    email: support@mongodb.com
   labels:
-    app.kubernetes.io/name: t8c-operator
-    app.kubernetes.io/instance: t8c-operator
-    app.kubernetes.io/managed-by: operator-life
-
+    owner: mongodb
+  name: mongodb-kubernetes-operator
+  namespace: "${NAMESPACE}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: t8c-operator
+      name: mongodb-kubernetes-operator
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        name: t8c-operator
+        name: mongodb-kubernetes-operator
     spec:
-      serviceAccountName: ${SANAME}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - mongodb-kubernetes-operator
+            topologyKey: kubernetes.io/hostname
       containers:
-      - name: t8c-operator
-        image: turbonomic/t8c-operator:42.0
-        imagePullPolicy: Always
+      - command:
+        - /usr/local/bin/entrypoint
         env:
         - name: WATCH_NAMESPACE
           valueFrom:
@@ -50,23 +62,31 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: OPERATOR_NAME
-          value: "t8c-operator"
+          value: mongodb-kubernetes-operator
+        - name: AGENT_IMAGE
+          value: quay.io/mongodb/mongodb-agent:11.0.5.6963-1
+        - name: VERSION_UPGRADE_HOOK_IMAGE
+          value: quay.io/mongodb/mongodb-kubernetes-operator-version-upgrade-post-start-hook:1.0.2
+        - name: READINESS_PROBE_IMAGE
+          value: quay.io/mongodb/mongodb-kubernetes-readinessprobe:1.0.4
+        - name: MONGODB_IMAGE
+          value: mongo
+        - name: MONGODB_REPO_URL
+          value: docker.io
+        image: quay.io/mongodb/mongodb-kubernetes-operator:0.7.0
+        imagePullPolicy: Always
+        name: mongodb-kubernetes-operator
+        resources:
+          limits:
+            cpu: 1100m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 200Mi
         securityContext:
           readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
-        volumeMounts:
-        - mountPath: /tmp
-          name: operator-tmpfs0
-      volumes:
-      - name: operator-tmpfs0
-        emptyDir: {}
+          runAsUser: 2000
+      serviceAccountName: ${SANAME}
 EOL
     kubectl create -f "${CHARTS_DIR}/operator.yaml" -n ${NAMESPACE}
 fi
-
-
-
-
-
