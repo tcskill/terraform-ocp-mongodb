@@ -36,8 +36,8 @@ resource "null_resource" "deploy_MongoCRD" {
 
 resource "null_resource" "deploy_mongoClusterRole" {
   triggers = {
-    namespace = var.mas_mongo_namespace
-    msaname = var.mas_mongo_serviceaccount
+    namespace = var.mongo_namespace
+    msaname = var.mongo_serviceaccount
     kubeconfig = var.cluster_config_file
   }
 
