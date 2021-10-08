@@ -60,7 +60,7 @@ resource "null_resource" "deploy_mongoClusterRole" {
 }
 
 resource "null_resource" "add_scc" {
-  depends_on = [null_resource.deploy_ClusterRole]
+  depends_on = [null_resource.deploy_mongoClusterRole]
   triggers = {
     kubeconfig = var.cluster_config_file
     namespace = var.mongo_namespace
