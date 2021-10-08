@@ -33,3 +33,28 @@ resource "null_resource" "deploy_MongoCRD" {
     }
   }
 } 
+
+resource "null_resource" "deploy_mongoClusterRole" {
+  triggers = {
+    namespace = var.mas_mongo_namespace
+    msaname = var.mas_mongo_serviceaccount
+    kubeconfig = var.cluster_config_file
+  }
+
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/configMongoClusterRole.sh ${self.triggers.msaname} ${self.triggers.namespace}"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "${path.module}/scripts/configMongoClusterRole.sh ${self.triggers.msaname} ${self.triggers.namespace} destroy"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+} 

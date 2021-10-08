@@ -13,7 +13,7 @@ if [[ "$3" == "destroy" ]]; then
 else 
 ##kubectl create -f "${CHARTS_DIR}/cluster_role.yaml"
 #build cluster role
-cat > "${CHARTS_DIR}/cluster_role.yaml" << EOL
+cat > "${CHARTS_DIR}/mongocluster_role.yaml" << EOL
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -23,50 +23,53 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - configmaps
-  - endpoints
-  - events
-  - persistentvolumeclaims
   - pods
-  - secrets
-  - serviceaccounts
   - services
+  - serviceaccounts
+  - services/finalizers
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  - configmaps
+  - secrets
   verbs:
-  - '*'
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - apps
   resources:
-  - daemonsets
   - deployments
-  - statefulsets
+  - daemonsets
   - replicasets
+  - statefulsets
   verbs:
-  - '*'
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - get
+  - create
 - apiGroups:
   - apps
+  resourceNames:
+  - mongodb-kubernetes-operator
   resources:
   - deployments/finalizers
   verbs:
   - update
-- apiGroups:
-  - extensions
-  resources:
-  - deployments
-  verbs:
-  - '*'
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-- apiGroups:
-  - policy
-  resources:
-  - podsecuritypolicies
-  - poddisruptionbudgets
-  verbs:
-  - '*'
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
@@ -77,55 +80,42 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - batch
+  - ""
   resources:
-  - jobs
+  - namespaces
   verbs:
-  - '*'
+  - get    
 - apiGroups:
-  - monitoring.coreos.com
+  - ""
   resources:
-  - servicemonitors
+  - pods
   verbs:
   - get
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  - deployments
+  verbs:
+  - get
+- apiGroups:
+  - mongodbcommunity.mongodb.com
+  resources:
+  - mongodbcommunity
+  - mongodbcommunity/status
+  - mongodbcommunity/spec
+  - mongodbcommunity/finalizers
+  verbs:
   - create
-- apiGroups:
-  - charts.helm.k8s.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - networking.istio.io
-  resources:
-  - gateways
-  - virtualservices
-  verbs:
-  - '*'
-- apiGroups:
-  - cert-manager.io
-  resources:
-  - certificates
-  verbs:
-  - '*'
-- apiGroups:
-    - route.openshift.io
-  resources:
-    - routes
-    - routes/custom-host
-  verbs:
-    - '*'
-- apiGroups:
-    - security.openshift.io
-  resourceNames:
-    - ${NAMESPACE}-${SANAME}-anyuid
-  resources:
-    - securitycontextconstraints
-  verbs:
-    - use
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 EOL
 #build cluster role binding
-cat > "${CHARTS_DIR}/cluster_role_binding.yaml" << EOL
+cat > "${CHARTS_DIR}/mongocluster_role_binding.yaml" << EOL
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -139,6 +129,6 @@ roleRef:
   name: ${SANAME}
   apiGroup: rbac.authorization.k8s.io
 EOL
-    kubectl create -f "${CHARTS_DIR}/cluster_role.yaml"
-    kubectl create -f "${CHARTS_DIR}/cluster_role_binding.yaml"
+    kubectl create -f "${CHARTS_DIR}/mongocluster_role.yaml"
+    kubectl create -f "${CHARTS_DIR}/mongocluster_role_binding.yaml"
 fi
