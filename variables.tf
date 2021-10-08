@@ -31,3 +31,9 @@ variable "mas_mongo_storageclass" {
   description = "Storageclass for MongoDB"
   default = "ibmc-vpc-block-10iops-tier"
 }
+
+variable "mas_mongo_serviceaccount" {
+  type        = string
+  description = "Name of the service account to use for mongo"
+  default = "mongodb-kubernetes-operator"
+}
