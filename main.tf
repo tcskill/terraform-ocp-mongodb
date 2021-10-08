@@ -12,7 +12,7 @@ module setup_clis {
 
 resource "null_resource" "deploy_MongoCRD" {
   triggers = {
-    namespace = var.mas_mongo_namespace
+    namespace = var.mongo_namespace
     kubeconfig = var.cluster_config_file
   }
 
