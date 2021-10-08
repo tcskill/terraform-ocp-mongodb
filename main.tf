@@ -57,4 +57,31 @@ resource "null_resource" "deploy_mongoClusterRole" {
       KUBECONFIG = self.triggers.kubeconfig
     }
   }
+}
+
+resource "null_resource" "add_scc" {
+  depends_on = [null_resource.deploy_ClusterRole]
+  triggers = {
+    kubeconfig = var.cluster_config_file
+    namespace = var.mongo_namespace
+    msaname = var.mongo_serviceaccount
+    bin_dir = module.setup_clis.bin_dir
+  }
+
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/configSCC.sh ${self.triggers.bin_dir} ${self.triggers.msaname} ${self.triggers.namespace}"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "${path.module}/scripts/configSCC.sh ${self.triggers.bin_dir} ${self.triggers.msaname} ${self.triggers.namespace} destroy"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
 } 

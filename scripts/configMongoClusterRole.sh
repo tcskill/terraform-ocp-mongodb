@@ -113,6 +113,14 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+    - security.openshift.io
+  resourceNames:
+    - ${NAMESPACE}-${SANAME}-anyuid
+  resources:
+    - securitycontextconstraints
+  verbs:
+    - use  
 EOL
 #build cluster role binding
 cat > "${CHARTS_DIR}/mongocluster_role_binding.yaml" << EOL
