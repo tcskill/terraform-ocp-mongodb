@@ -6,15 +6,10 @@ CHARTS_DIR=$(cd $(dirname $0)/../charts; pwd -P)
 
 if [[ "$3" == "destroy" ]]; then
     echo "removing chart extension..."
-    # remove the the operator and chart extensions
+    # remove the the operator 
     kubectl delete Deployment mongodb-kubernetes-operator -n ${NAMESPACE}
-    kubectl delete CustomResourceDefinition xls.charts.helm.k8s.io
-else 
-    # deploy the chart extensions needed
-    #kubectl create -f "${CHARTS_DIR}/charts_v1alpha1_xl_crd.yaml"
-
-    # create the yaml for operator deployment and deploy it
-
+else
+# create the operator 
 cat > "${CHARTS_DIR}/operator.yaml" << EOL
 apiVersion: apps/v1
 kind: Deployment
