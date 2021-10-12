@@ -165,7 +165,7 @@ resource "tls_self_signed_cert" "ca" {
 }
 
 resource "null_resource" "deploy_certs" {
-  depends_on = [tls_self_signed_cert.ca]
+  depends_on = [tls_self_signed_cert.ca, null_resource.deploy_operator]
   triggers = {
     kubeconfig = var.cluster_config_file
     namespace = var.mongo_namespace
