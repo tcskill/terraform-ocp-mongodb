@@ -245,3 +245,28 @@ resource "null_resource" "deploy_certs" {
     }
   }
 }
+
+resource "null_resource" "deploy_instance" {
+  depends_on = [null_resource.deploy_operator]
+  triggers = {
+    namespace = var.mongo_namespace
+    kubeconfig = var.cluster_config_file
+  }
+
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/deployInstance.sh ${self.triggers.namespace}"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "${path.module}/scripts/deployInstance.sh ${self.triggers.namespace} destroy"
+
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+    }
+  }
+}
