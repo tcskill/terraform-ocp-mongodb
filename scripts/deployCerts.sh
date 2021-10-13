@@ -17,5 +17,5 @@ else
     echo "adding mongon configmap..."
     kubectl create configmap mas-mongo-ce-cert-map --from-file=ca.crt=${CERTPATH}/ca.pem -n ${NAMESPACE}
     echo "adding mongo secret..."
-    kubectl secret tls mas-mongo-ce-cert-secret --cert=${CERTPATH}/server.crt --key=${CERTPATH}/server.key -n ${NAMESPACE}
+    kubectl create secret tls mas-mongo-ce-cert-secret --cert=${CERTPATH}/server.crt --key=${CERTPATH}/server.key -n ${NAMESPACE}
 fi
