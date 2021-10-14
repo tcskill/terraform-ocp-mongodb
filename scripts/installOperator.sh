@@ -7,7 +7,7 @@ CHARTS_DIR=$(cd $(dirname $0)/../charts; pwd -P)
 if [[ "$3" == "destroy" ]]; then
     echo "removing chart extension..."
     # remove the the operator 
-    kubectl delete Deployment mongodb-kubernetes-operator -n ${NAMESPACE}
+    kubectl delete Deployment ${SANAME} -n ${NAMESPACE}
 else
 # create the operator 
 cat > "${CHARTS_DIR}/operator.yaml" << EOL
@@ -18,13 +18,13 @@ metadata:
     email: support@mongodb.com
   labels:
     owner: mongodb
-  name: mongodb-kubernetes-operator
+  name: ${SANAME}
   namespace: "${NAMESPACE}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: mongodb-kubernetes-operator
+      name: ${SANAME}
   strategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -32,7 +32,7 @@ spec:
   template:
     metadata:
       labels:
-        name: mongodb-kubernetes-operator
+        name: ${SANAME}
     spec:
       affinity:
         podAntiAffinity:
@@ -42,7 +42,7 @@ spec:
               - key: name
                 operator: In
                 values:
-                - mongodb-kubernetes-operator
+                - ${SANAME}
             topologyKey: kubernetes.io/hostname
       containers:
       - command:
@@ -57,11 +57,11 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: OPERATOR_NAME
-          value: mongodb-kubernetes-operator
+          value: ${SANAME}
         - name: AGENT_IMAGE
           value: quay.io/mongodb/mongodb-agent:11.0.5.6963-1
         - name: VERSION_UPGRADE_HOOK_IMAGE
-          value: quay.io/mongodb/mongodb-kubernetes-operator-version-upgrade-post-start-hook:1.0.2
+          value: quay.io/mongodb/${SANAME}-version-upgrade-post-start-hook:1.0.2
         - name: READINESS_PROBE_IMAGE
           value: quay.io/mongodb/mongodb-kubernetes-readinessprobe:1.0.4
         - name: MONGODB_IMAGE
@@ -70,7 +70,7 @@ spec:
           value: docker.io
         image: quay.io/mongodb/mongodb-kubernetes-operator:0.7.0
         imagePullPolicy: Always
-        name: mongodb-kubernetes-operator
+        name: ${SANAME}
         resources:
           limits:
             cpu: 1100m
