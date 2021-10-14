@@ -167,7 +167,7 @@ resource "tls_private_key" "cert" {
   #}
 }
 
-resource "local_file" "foo" {
+resource "local_file" "cafile" {
   sensitive_content = "${tls_self_signed_cert.ca.cert_pem}"
   file_permission = "0600"
   filename    = "${local.tmp_dir}/ca.pem"
@@ -231,13 +231,13 @@ resource "tls_locally_signed_cert" "cert" {
 
 }
 
-resource "local_file" "foo" {
+resource "local_file" "srvkeyfile" {
   sensitive_content = "${tls_private_key.cert.private_key_pem}"
   file_permission = "0600"
   filename    = "${local.tmp_dir}/server.key"
 }
 
-  resource "local_file" "foo" {
+  resource "local_file" "srvcrtfile" {
   sensitive_content = "${tls_locally_signed_cert.cert.cert_pem}"
   file_permission = "0600"
   filename    = "${local.tmp_dir}/server.crt"
