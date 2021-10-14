@@ -7,7 +7,7 @@ if [[ "$2" == "destroy" ]]; then
     #echo "removing mongo release..."
     # remove the the release
     #kubectl delete ReplicaSet mas-mongo-ce -n ${NAMESPACE}
-else
+#else
     echo "adding mongo release..."
     # deploy the release
     kubectl apply -f "${CHARTS_DIR}/mas-mongo-ce.yaml" -n ${NAMESPACE}
