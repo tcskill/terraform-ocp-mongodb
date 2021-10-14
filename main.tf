@@ -161,10 +161,6 @@ resource "tls_self_signed_cert" "ca" {
 resource "tls_private_key" "cert" {
   algorithm   = "RSA"
   rsa_bits    = "2048"
-
-  #  provisioner "local-exec" {
-  #  command = "echo '${tls_self_signed_cert.ca.cert_pem}' > '${local.tmp_dir}/ca.pem' && chmod 0600 '${local.tmp_dir}/ca.pem'"
-  #}
 }
 
 resource "local_file" "cafile" {
@@ -215,19 +211,6 @@ resource "tls_locally_signed_cert" "cert" {
     "timestamping",
     "ocsp_signing"
   ]
-
-  # Store the key in a file.
-  #provisioner "local-exec" {
-  #  command = "echo '${tls_private_key.cert.private_key_pem}' > '${local.tmp_dir}/server.key' && chmod 0600 '${local.tmp_dir}/server.key'"
-  #}
-
-
-
-  # Store the crt in a file.
-  #provisioner "local-exec" {
-  #  command = "echo '${tls_locally_signed_cert.cert.cert_pem}' > '${local.tmp_dir}/server.crt' && chmod 0600 '${local.tmp_dir}/server.crt'"
-  #}
-  
 
 }
 
