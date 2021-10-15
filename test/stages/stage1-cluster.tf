@@ -7,7 +7,7 @@ module "dev_cluster" {
   name                    = var.cluster_name
   worker_count            = 2
   ocp_version             = "4.6"
-  name_prefix             = var.name_prefix
+  name_prefix             = ""
   exists                  = true
   cos_id                  = ""
   vpc_subnet_count        = 0
