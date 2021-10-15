@@ -1,9 +1,6 @@
 #  MongoDB-CE / OCP terraform module
 
-Deploys .... (module currently being built)
-
-### Supported Component Selector Probe Types 
-
+Deploys MongoDB Community Edition on RedHat OpenShift within a given namespace.  This module also enables security and creates required certifcates that can be used for secure connections.  
 
 ## Supported platforms
 
@@ -20,7 +17,7 @@ The module uses the following elements
 
 ### Environment
 
-- kubectl - used to apply the yaml to create the route
+- kubectl - used to apply yaml 
 
 ## Suggested companion modules
 
@@ -28,8 +25,21 @@ The module itself requires some information from the cluster and needs a
 namespace to be created. The following companion
 modules can help provide the required information:
 
+- Cluster - https://github.com/ibm-garage-cloud/terraform-cluster-ibmcloud
+- Namespace - https://github.com/ibm-garage-cloud/terraform-cluster-namespace
 
 ## Example usage
 
+```hcl-terraform
+module "dev_ocp_mongoce" {
+  source = "github.com/tcskill/terraform-ocp-mongodb-test?ref=v1.0.0"
 
+  cluster_config_file      = module.cluster.config_file_path
+  cluster_type             = module.cluster.platform.type_code
+  cluster_ingress_hostname = module.cluster.platform.ingress
+  tls_secret_name          = module.cluster.platform.tls_secret
+  
+  mongo_namespace    = var.mongo_namespace
+}
+```
 
