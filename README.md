@@ -1,4 +1,4 @@
-#  MAS terraform module
+#  MongoDB-CE / OCP terraform module
 
 Deploys .... (module currently being built)
 
