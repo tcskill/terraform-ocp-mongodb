@@ -1,5 +1,7 @@
 #  MongoDB-CE / OCP terraform module
 
+![Verify and release module](https://github.com/cloud-native-toolkit/terraform-ocp-mongodb/workflows/Verify%20and%20release%20module/badge.svg)
+
 Deploys MongoDB Community Edition on RedHat OpenShift within a given namespace.  This module also enables security and creates required certifcates that can be used for secure connections.  
 
 ## Supported platforms
@@ -32,7 +34,7 @@ modules can help provide the required information:
 
 ```hcl-terraform
 module "dev_ocp_mongoce" {
-  source = "github.com/tcskill/terraform-ocp-mongodb-test?ref=v1.0.0"
+  source = "github.com/cloud-native-toolkit/terraform-ocp-mongodb"
 
   cluster_config_file      = module.cluster.config_file_path
   cluster_type             = module.cluster.platform.type_code
