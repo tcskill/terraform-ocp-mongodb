@@ -6,5 +6,6 @@ module "tools_mongo" {
   cluster_ingress_hostname = module.dev_cluster.platform.ingress
   tls_secret_name          = module.dev_cluster.platform.tls_secret
   
-  mongo_namespace    = var.mongo_namespace
+  mongo_namespace    = module.dev_namespace.name
+  mongo_storageclass = "ibmc-vpc-block-5iops-tier"
 }
