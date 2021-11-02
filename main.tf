@@ -256,11 +256,12 @@ resource "null_resource" "deploy_instance" {
   depends_on = [null_resource.deploy_operator]
   triggers = {
     namespace = var.mongo_namespace
+    mongopass = var.mongo_password
     kubeconfig = var.cluster_config_file
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/deployInstance.sh ${self.triggers.namespace}"
+    command = "${path.module}/scripts/deployInstance.sh ${self.triggers.namespace} ${self.triggers.mongopass}"
 
     environment = {
       KUBECONFIG = self.triggers.kubeconfig
@@ -269,7 +270,7 @@ resource "null_resource" "deploy_instance" {
 
   provisioner "local-exec" {
     when = destroy
-    command = "${path.module}/scripts/deployInstance.sh ${self.triggers.namespace} destroy"
+    command = "${path.module}/scripts/deployInstance.sh ${self.triggers.namespace} null destroy"
 
     environment = {
       KUBECONFIG = self.triggers.kubeconfig
