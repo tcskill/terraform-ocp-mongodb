@@ -19,5 +19,5 @@ else
     echo "adding mongo release..."
     # deploy the release
     sed s/%DB_PASS%/${DBPW}/g ${CHARTS_DIR}/mas-mongo-ce.yaml > ${TMP_DIR}/prod-mas-mongo-ce.yaml
-    kubectl apply -f "${TMP_DIR}/mas-mongo-ce.yaml" -n ${NAMESPACE}
+    kubectl apply -f "${TMP_DIR}/prod-mas-mongo-ce.yaml" -n ${NAMESPACE}
 fi
