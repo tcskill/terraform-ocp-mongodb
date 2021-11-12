@@ -277,3 +277,9 @@ resource "null_resource" "deploy_instance" {
     }
   }
 }
+
+data "local_file" "svcname" {
+    depends_on = [null_resource.deploy_instance]
+    
+    filename = "${local.tmp_dir}/mas-svc-name"
+}

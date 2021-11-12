@@ -14,3 +14,12 @@ output "mongo_namespace" {
     null_resource.deploy_instance
   ]
 }
+
+output "mongo_servicename" {
+  description = "Name of mongo service to connect to"
+  depends_on  = [
+    null_resource.deploy_instance
+  ]
+  value       = data.local_file.svcname.content
+}
+
