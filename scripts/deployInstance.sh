@@ -22,7 +22,7 @@ else
     kubectl apply -f "${TMP_DIR}/prod-mas-mongo-ce.yaml" -n ${NAMESPACE}
     sleep 6m
  
-    SVCNAME=$(kubectl get svc -n mongo -o=jsonpath="{.items..metadata.name}")
+    SVCNAME=$(kubectl get svc -n ${NAMESPACE} -o=jsonpath="{.items..metadata.name}")
     echo ${SVCNAME} > ${TMP_DIR}/mas-svc-name
 
 fi
