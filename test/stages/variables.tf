@@ -50,7 +50,6 @@ variable "mongo_namespace" {
 variable "mongo_storageclass" {
   type        = string
   description = "Storageclass for MongoDB"
-  default = "ibmc-vpc-block-10iops-tier"
 }
 
 variable "mongo_serviceaccount" {

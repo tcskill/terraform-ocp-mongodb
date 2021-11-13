@@ -1,4 +1,4 @@
-module "dev_tools_namespace" {
+module "dev_namespace" {
   source = "github.com/ibm-garage-cloud/terraform-cluster-namespace?ref=v3.1.2"
 
   cluster_config_file_path = module.dev_cluster.config_file_path

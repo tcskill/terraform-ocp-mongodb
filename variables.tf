@@ -37,3 +37,10 @@ variable "mongo_serviceaccount" {
   description = "Name of the service account to use for mongo"
   default = "mongodb-kubernetes-operator"
 }
+
+variable "mongo_password" {
+  type        = string
+  description = "admin password for mongodb"
+  default = "changeMechange01"
+}
+

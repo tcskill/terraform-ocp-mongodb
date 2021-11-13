@@ -74,4 +74,4 @@ metadata:
   name: mas-mongo-ce-admin-password
 type: Opaque
 stringData:
-  password: changeMechange01
+  password: %DB_PASS%
