@@ -1,11 +1,8 @@
-name: MAS
+name: MongoDB
 type: terraform
-description: Module to install MAS
+description: Module to install MongoDB-CE on OCP Cluster
 tags:
     - tools
-    - devops
-    - quality gate
-    - lint
 versions:
 - platforms:
     - ocp4
