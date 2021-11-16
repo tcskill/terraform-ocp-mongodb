@@ -15,14 +15,14 @@ mkdir -p "${TMP_DIR}"
 if [[ "$4" == "destroy" ]]; then
     echo "removing mongo release..."
     # remove the the release
-    kubectl delete StatefulSet mas-mongo-ce -n ${NAMESPACE}
+    #kubectl delete StatefulSet mas-mongo-ce -n ${NAMESPACE}
+    kubectl delete -f "${TMP_DIR}/prod-mas-mongo-ce.yaml" -n ${NAMESPACE}
 else
     echo "adding mongo release..."
     # deploy the release
     sed -e "s/%DB_PASS%/${DBPW}/g" \
-        -e "s/%STORCLASS%/${STORCLASS}/g" \ 
+        -e "s/%STORCLASS%/${STORCLASS}/g" ${CHARTS_DIR}/mas-mongo-ce.yaml > ${TMP_DIR}/prod-mas-mongo-ce.yaml
     
-    ${CHARTS_DIR}/mas-mongo-ce.yaml > ${TMP_DIR}/prod-mas-mongo-ce.yaml
     kubectl apply -f "${TMP_DIR}/prod-mas-mongo-ce.yaml" -n ${NAMESPACE}
     sleep 6m
  
