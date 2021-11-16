@@ -15,9 +15,6 @@ mkdir -p "${TMP_DIR}"
 if [[ "$4" == "destroy" ]]; then
     echo "removing mongo release..."
     # remove the the release
-    #kubectl delete StatefulSet mas-mongo-ce -n ${NAMESPACE}
-    #kubectl delete -f "${TMP_DIR}/prod-mas-mongo-ce.yaml" -n ${NAMESPACE}
-    #kubectl delete MongoDBCommunity mas-mongo-ce -n {$NAMESPACE}
 else
     echo "adding mongo release..."
     # deploy the release
